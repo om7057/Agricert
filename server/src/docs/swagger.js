@@ -17,6 +17,77 @@
  *     description: Batch management operations
  *   - name: Inspections
  *     description: Quality inspection operations
+ *   - name: Credentials
+ *     description: Verifiable Credential operations
+ *   - name: Verification
+ *     description: Credential verification operations
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     VerifiableCredential:
+ *       type: object
+ *       properties:
+ *         '@context':
+ *           type: array
+ *           items:
+ *             type: string
+ *         type:
+ *           type: array
+ *           items:
+ *             type: string
+ *         issuer:
+ *           type: object
+ *           properties:
+ *             id:
+ *               type: string
+ *               example: did:web:agriqcert.org
+ *             name:
+ *               type: string
+ *             type:
+ *               type: string
+ *         issuanceDate:
+ *           type: string
+ *           format: date-time
+ *         expirationDate:
+ *           type: string
+ *           format: date-time
+ *         credentialSubject:
+ *           type: object
+ *           properties:
+ *             batchId:
+ *               type: string
+ *             productName:
+ *               type: string
+ *             productType:
+ *               type: string
+ *             origin:
+ *               type: object
+ *             qualityParameters:
+ *               type: object
+ *             inspection:
+ *               type: object
+ *             certifications:
+ *               type: array
+ *         proof:
+ *           type: object
+ *     QRCodeResponse:
+ *       type: object
+ *       properties:
+ *         qrCode:
+ *           type: string
+ *           description: Base64 encoded QR code image
+ *         qrData:
+ *           type: string
+ *           description: JSON string embedded in QR code
+ *         checksum:
+ *           type: string
+ *           description: SHA-256 checksum for verification
+ *         format:
+ *           type: string
+ *           example: image/png
  */
 
 /**
@@ -407,5 +478,173 @@
  *       403:
  *         description: Access denied
  *       404:
- *         description: No inspection found for this batch
+ *         description: Not found
+ *
+ * /api/credentials/issue:
+ *   post:
+ *     summary: Issue a Verifiable Credential
+ *     tags: [Credentials]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - batchId
+ *               - inspectionId
+ *             properties:
+ *               batchId:
+ *                 type: integer
+ *                 example: 1
+ *               inspectionId:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Credential issued successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 credential:
+ *                   type: object
+ *                 qrCode:
+ *                   type: string
+ *                 credentialUrl:
+ *                   type: string
+ *       400:
+ *         description: Bad request
+ *
+ * /api/credentials/{id}:
+ *   get:
+ *     summary: Get credential by ID
+ *     tags: [Credentials]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Credential retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/VerifiableCredential'
+ *       404:
+ *         description: Credential not found
+ *
+ * /api/credentials/{id}/qr:
+ *   get:
+ *     summary: Get QR code image for credential
+ *     tags: [Credentials]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: QR code image
+ *         content:
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       404:
+ *         description: QR code not found
+ *
+ * /api/credentials/{id}/revoke:
+ *   post:
+ *     summary: Revoke a credential
+ *     tags: [Credentials]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - reason
+ *             properties:
+ *               reason:
+ *                 type: string
+ *                 example: Failed re-inspection
+ *     responses:
+ *       200:
+ *         description: Credential revoked successfully
+ *       400:
+ *         description: Bad request
+ *
+ * /api/credentials/batch/{batchId}:
+ *   get:
+ *     summary: Get credentials for a batch
+ *     tags: [Credentials]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: batchId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Credentials retrieved successfully
+ *       404:
+ *         description: Not found
+ *
+ * /api/credentials/verify:
+ *   post:
+ *     summary: Verify a Verifiable Credential
+ *     tags: [Credentials]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - vcData
+ *             properties:
+ *               vcData:
+ *                 $ref: '#/components/schemas/VerifiableCredential'
+ *     responses:
+ *       200:
+ *         description: Verification result
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 valid:
+ *                   type: boolean
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                 issuer:
+ *                   type: object
+ *                 issuanceDate:
+ *                   type: string
+ *                 expirationDate:
+ *                   type: string
  */

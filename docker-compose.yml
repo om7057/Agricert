@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+  # AgriQCert PostgreSQL Database
   postgres:
     image: postgres:15-alpine
     container_name: agriqcert_postgres
@@ -13,13 +14,109 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./server/src/database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - ./server/src/database/schema.sql:/docker-entrypoint-initdb.d/01-agriqcert-schema.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d agriqcert_db"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - agriqcert_network
+
+  # Inji Certify PostgreSQL Database
+  inji-postgres:
+    image: postgres:15-alpine
+    container_name: inji_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: mosip_certify
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - inji_postgres_data:/var/lib/postgresql/data
+      - ./inji-certify/docker-compose/docker-compose-injistack/combined_init.sql:/docker-entrypoint-initdb.d/01-init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d mosip_certify"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - agriqcert_network
+
+  redis:
+    image: redis:alpine
+    container_name: agriqcert_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - agriqcert_network
+
+  inji-certify:
+    image: mosipid/inji-certify-with-plugins:0.13.0
+    container_name: agriqcert_inji_certify
+    restart: unless-stopped
+    user: root
+    ports:
+      - "8090:8090"
+    environment:
+      - container_user=mosip
+      - active_profile_env=default,csvdp-farmer
+      - SPRING_CONFIG_NAME=certify
+      - SPRING_CONFIG_LOCATION=/home/mosip/config/
+      - enable_certify_artifactory=false
+      - download_hsm_client=false
+      - mosip_certify_domain_url=http://inji-certify-nginx:80
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://inji-postgres:5432/mosip_certify?currentSchema=certify
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    volumes:
+      - ./inji-certify/docker-compose/docker-compose-injistack/config/certify-default.properties:/home/mosip/config/certify-default.properties
+      - ./inji-certify/docker-compose/docker-compose-injistack/config/certify-csvdp-farmer.properties:/home/mosip/config/certify-csvdp-farmer.properties
+      - ./inji-certify/docker-compose/docker-compose-injistack/config/farmer_identity_data.csv:/home/mosip/config/farmer_identity_data.csv
+      - inji_certify_data:/home/mosip/CERTIFY_PKCS12
+    networks:
+      - agriqcert_network
+    depends_on:
+      - inji-postgres
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f http://localhost:8090/v1/certify/actuator/health || exit 1",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+  inji-certify-nginx:
+    image: nginx:stable-alpine
+    container_name: agriqcert_inji_nginx
+    restart: unless-stopped
+    ports:
+      - "8091:80"
+    volumes:
+      - ./inji-certify/docker-compose/docker-compose-injistack/certify-nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - agriqcert_network
+    depends_on:
+      - inji-certify
+
+networks:
+  agriqcert_network:
+    driver: bridge
 
 volumes:
   postgres_data:
+    driver: local
+  inji_postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  inji_certify_data:
     driver: local

@@ -19,6 +19,10 @@ export const error = (res, message = 'Error', statusCode = 500, errors = null) =
   return res.status(statusCode).json(response);
 };
 
+// Backwards-compatible aliases used across controllers
+export const successResponse = success;
+export const errorResponse = error;
+
 export const created = (res, data = null, message = 'Resource created successfully') => {
   return success(res, data, message, 201);
 };

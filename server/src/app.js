@@ -4,6 +4,7 @@ import swaggerUi from 'swagger-ui-express';
 import authRoutes from './routes/auth.routes.js';
 import batchRoutes from './routes/batch.routes.js';
 import inspectionRoutes from './routes/inspection.routes.js';
+import credentialRoutes from './routes/credential.routes.js';
 import swaggerSpec from './config/swagger.js';
 
 const app = express();
@@ -33,6 +34,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/batches', batchRoutes);
 app.use('/api/inspections', inspectionRoutes);
+app.use('/api/credentials', credentialRoutes);
 
 app.use((req, res) => {
   res.status(404).json({

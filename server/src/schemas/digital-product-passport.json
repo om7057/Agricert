@@ -1,0 +1,162 @@
+{
+  "@context": [
+    "https://www.w3.org/2018/credentials/v1",
+    "https://www.w3.org/2018/credentials/examples/v1",
+    {
+      "@version": 1.1,
+      "agri": "https://schema.agriqcert.org/v1#",
+      "AgriQualityCertificate": "agri:AgriQualityCertificate",
+      "batchId": "agri:batchId",
+      "productName": "agri:productName",
+      "productType": "agri:productType",
+      "origin": "agri:origin",
+      "quantity": "agri:quantity",
+      "unit": "agri:unit",
+      "harvestDate": "agri:harvestDate",
+      "exporter": "agri:exporter",
+      "qualityStandard": "agri:qualityStandard",
+      "inspection": "agri:inspection",
+      "qualityParameters": "agri:qualityParameters",
+      "certifications": "agri:certifications",
+      "supplyChain": "agri:supplyChain"
+    }
+  ],
+  "type": ["VerifiableCredential", "AgriQualityCertificate"],
+  "issuer": {
+    "id": "did:web:agriqcert.org",
+    "name": "AgriQCert Quality Assurance",
+    "type": "Organization"
+  },
+  "issuanceDate": "",
+  "expirationDate": "",
+  "credentialSubject": {
+    "type": "AgriQualityCertificate",
+    "batchId": "",
+    "productName": "",
+    "productType": "",
+    "origin": {
+      "country": "",
+      "state": "",
+      "district": "",
+      "farmLocation": {
+        "latitude": null,
+        "longitude": null
+      }
+    },
+    "quantity": {
+      "value": null,
+      "unit": ""
+    },
+    "harvestDate": "",
+    "exporter": {
+      "id": "",
+      "name": "",
+      "registrationNumber": "",
+      "address": ""
+    },
+    "qualityStandard": {
+      "standard": "",
+      "version": "",
+      "complianceLevel": ""
+    },
+    "inspection": {
+      "inspectionId": "",
+      "inspectionDate": "",
+      "inspector": {
+        "id": "",
+        "name": "",
+        "licenseNumber": ""
+      },
+      "result": "",
+      "grade": "",
+      "remarks": ""
+    },
+    "qualityParameters": {
+      "moistureContent": {
+        "value": null,
+        "unit": "%",
+        "limit": null,
+        "status": ""
+      },
+      "aflatoxinLevel": {
+        "value": null,
+        "unit": "ppb",
+        "limit": null,
+        "status": ""
+      },
+      "pesticideResidue": {
+        "value": null,
+        "unit": "mg/kg",
+        "limit": null,
+        "status": ""
+      },
+      "foreignMatter": {
+        "value": null,
+        "unit": "%",
+        "limit": null,
+        "status": ""
+      },
+      "brokenGrains": {
+        "value": null,
+        "unit": "%",
+        "limit": null,
+        "status": ""
+      }
+    },
+    "certifications": [
+      {
+        "type": "",
+        "certificationBody": "",
+        "certificateNumber": "",
+        "validUntil": ""
+      }
+    ],
+    "supplyChain": {
+      "stages": [
+        {
+          "stage": "",
+          "location": "",
+          "timestamp": "",
+          "handler": ""
+        }
+      ],
+      "transportConditions": {
+        "temperature": null,
+        "humidity": null,
+        "packaging": ""
+      }
+    },
+    "compliance": {
+      "fssai": {
+        "compliant": false,
+        "licenseNumber": ""
+      },
+      "apeda": {
+        "compliant": false,
+        "registrationNumber": ""
+      },
+      "euOrganic": {
+        "compliant": false,
+        "certificateNumber": ""
+      },
+      "usda": {
+        "compliant": false,
+        "certificateNumber": ""
+      }
+    },
+    "attachments": [
+      {
+        "type": "",
+        "description": "",
+        "url": ""
+      }
+    ]
+  },
+  "proof": {
+    "type": "RsaSignature2018",
+    "created": "",
+    "proofPurpose": "assertionMethod",
+    "verificationMethod": "",
+    "jws": ""
+  }
+}

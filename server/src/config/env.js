@@ -25,6 +25,13 @@ export const env = {
   AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
   AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
   AWS_S3_BUCKET: process.env.AWS_S3_BUCKET || 'agriqcert-uploads',
+
+  INJI_CERTIFY_URL: process.env.INJI_CERTIFY_URL || 'https://api.inji.certify.io',
+  INJI_VERIFY_URL: process.env.INJI_VERIFY_URL || 'https://api.inji.verify.io',
+  INJI_WALLET_URL: process.env.INJI_WALLET_URL || 'https://api.inji.wallet.io',
+  INJI_API_KEY: process.env.INJI_API_KEY || 'placeholder-api-key',
+
+  BASE_URL: process.env.BASE_URL || 'http://localhost:3000',
 };
 
 export default env;
