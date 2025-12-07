@@ -1,0 +1,73 @@
+{
+  "credentialConfigKeyId": "AgriculturalQualityCertificate",
+  "format": "ldp_vc",
+  "scope": "agricultural_quality_certificate_vc_ldp",
+  "display": [
+    {
+      "name": "Agricultural Quality Certificate",
+      "locale": "en",
+      "logo": {
+        "url": "https://via.placeholder.com/150",
+        "alt_text": "AgriQCert Logo"
+      },
+      "background_color": "#2E7D32",
+      "text_color": "#FFFFFF"
+    }
+  ],
+  "credentialSubject": {
+    "batchNumber": {},
+    "productType": {},
+    "farmerId": {},
+    "farmerName": {},
+    "inspectionDate": {},
+    "inspectorName": {},
+    "certificationLevel": {},
+    "expiryDate": {},
+    "result": {}
+  },
+  "order": [
+    "batchNumber",
+    "productType",
+    "farmerId",
+    "farmerName",
+    "inspectionDate",
+    "inspectorName",
+    "certificationLevel",
+    "expiryDate",
+    "result"
+  ],
+  "cryptoSuiteAlgorithm": "Ed25519Signature2020",
+  "keyManagerAppId": "CERTIFY_VC_SIGN_ED25519",
+  "didUrl": "did:web:localhost:8090:v1:certify",
+  "context": [
+    "https://www.w3.org/2018/credentials/v1",
+    {
+      "@context": {
+        "@version": 1.1,
+        "@protected": true,
+        "AgriculturalQualityCertificate": {
+          "@id": "https://agriqcert.io/credentials/AgriculturalQualityCertificate",
+          "@context": {
+            "@version": 1.1,
+            "@protected": true,
+            "batchNumber": "https://agriqcert.io/credentials/batchNumber",
+            "productType": "https://agriqcert.io/credentials/productType",
+            "farmerId": "https://agriqcert.io/credentials/farmerId",
+            "farmerName": "https://agriqcert.io/credentials/farmerName",
+            "inspectionDate": "https://agriqcert.io/credentials/inspectionDate",
+            "inspectorName": "https://agriqcert.io/credentials/inspectorName",
+            "certificationLevel": "https://agriqcert.io/credentials/certificationLevel",
+            "expiryDate": "https://agriqcert.io/credentials/expiryDate",
+            "result": "https://agriqcert.io/credentials/result"
+          }
+        }
+      }
+    }
+  ],
+  "type": [
+    "VerifiableCredential",
+    "AgriculturalQualityCertificate"
+  ],
+  "vcTemplate": "#set($credentialSubject = $dataProviderPluginResponse.get('credentialSubject'))\n{\n  \"@context\": [\n    \"https://www.w3.org/2018/credentials/v1\",\n    {\n      \"@context\": {\n        \"@version\": 1.1,\n        \"@protected\": true,\n        \"AgriculturalQualityCertificate\": {\n          \"@id\": \"https://agriqcert.io/credentials/AgriculturalQualityCertificate\",\n          \"@context\": {\n            \"@version\": 1.1,\n            \"@protected\": true,\n            \"batchNumber\": \"https://agriqcert.io/credentials/batchNumber\",\n            \"productType\": \"https://agriqcert.io/credentials/productType\",\n            \"farmerId\": \"https://agriqcert.io/credentials/farmerId\",\n            \"farmerName\": \"https://agriqcert.io/credentials/farmerName\",\n            \"inspectionDate\": \"https://agriqcert.io/credentials/inspectionDate\",\n            \"inspectorName\": \"https://agriqcert.io/credentials/inspectorName\",\n            \"certificationLevel\": \"https://agriqcert.io/credentials/certificationLevel\",\n            \"expiryDate\": \"https://agriqcert.io/credentials/expiryDate\",\n            \"result\": \"https://agriqcert.io/credentials/result\"\n          }\n        }\n      }\n    }\n  ],\n  \"type\": [\n    \"VerifiableCredential\",\n    \"AgriculturalQualityCertificate\"\n  ],\n  \"issuer\": \"$issuer\",\n  \"issuanceDate\": \"$issuanceDate\",\n  \"credentialSubject\": {\n    \"id\": \"$credentialSubject.get('id')\",\n    \"batchNumber\": \"$credentialSubject.get('batchNumber')\",\n    \"productType\": \"$credentialSubject.get('productType')\",\n    \"farmerId\": \"$credentialSubject.get('farmerId')\",\n    \"farmerName\": \"$credentialSubject.get('farmerName')\",\n    \"inspectionDate\": \"$credentialSubject.get('inspectionDate')\",\n    \"inspectorName\": \"$credentialSubject.get('inspectorName')\",\n    \"certificationLevel\": \"$credentialSubject.get('certificationLevel')\",\n    \"expiryDate\": \"$credentialSubject.get('expiryDate')\",\n    \"result\": \"$credentialSubject.get('result')\"\n  }\n}",
+  "statusListCredentialTypeConfigured": false
+}

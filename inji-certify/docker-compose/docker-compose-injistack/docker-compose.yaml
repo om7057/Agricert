@@ -22,7 +22,7 @@ services:
       - redis-data:/data
 
   certify:
-    image: mosipid/inji-certify-with-plugins:0.13.0
+    image: mosipid/inji-certify-with-plugins:0.13.1
     user: root
     ports:
       - 8090:8090
